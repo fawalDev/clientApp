@@ -1,28 +1,53 @@
+import type Res from '../../models/response';
+import type IAuthRes from '../../models/interfaces/response/fulfill/authenRes';
+
 import { useState } from 'react';
+
 import Input from '../../components/Input';
-import { loginAction } from './loginAction';
 import { useStore } from 'zustand';
+
+import { loginAction } from './loginAction';
 import authenStore from '../../store/authenStore';
 import { setJWT, setUserInfor } from '../../ultilities/jwtToken';
+import useTwoWayBinding from '../../hooks/useTwoWayBinding';
+import ErrorMsg from '../../components/ErrorMsg';
+import useValidate from '../../hooks/useValidate';
+import { isNotNull } from '../../ultilities/inputValidation/validate';
+import { useNavigate } from 'react-router';
+
+
+
 
 export default function LoginForm() {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [email, onchangeEmail] = useTwoWayBinding('')
+  const [password, onchangePassword] = useTwoWayBinding('')
+
+  // validate
+  const emailErrorMsg = useValidate('Email', email, [isNotNull])
+  const passwordErrorMsg = useValidate('Password', password, [isNotNull])
+
 
   const setAuthenInfor = useStore(authenStore, (state) => state.setAuthenInfor);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
+  const [isSubmited, setIsSubmited] = useState(false)
+  const navigate = useNavigate()
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    loginAction(formData.email, formData.password)
-      .then((data) => {
+    e.preventDefault()
+    setIsSubmited(true)
+
+    // prevent submit if any validation errors
+    if (emailErrorMsg || passwordErrorMsg)
+      return
+
+    loginAction(email, password)
+      .then((data: Res<IAuthRes>) => {
         // dispatch state action in zustand store
-        setAuthenInfor(data.user);
+        setAuthenInfor(data.infor?.userInfor!);
         // store JWT in localStorage
-        setJWT(data.token);
-        setUserInfor(data.user);
+        setJWT(data.infor?.jwtToken || '');
+        setUserInfor(data.infor?.userInfor!)
+        navigate('/'); // redirect to home page after login
       });
   };
 
@@ -31,16 +56,20 @@ export default function LoginForm() {
       <Input isRed
         label="YOUR E-MAIL"
         name="email"
-        value={formData.email}
-        onChange={handleChange}
-      />
+        value={email}
+        onChange={onchangeEmail}>
+        {isSubmited && emailErrorMsg && < ErrorMsg msg={emailErrorMsg} />}
+      </Input>
+
       <Input isRed
         label="PASSWORD"
         type="password"
         name="password"
-        value={formData.password}
-        onChange={handleChange}
-      />
+        value={password}
+        onChange={onchangePassword}>
+        {isSubmited && passwordErrorMsg && < ErrorMsg msg={passwordErrorMsg} />}
+      </Input>
+
       <button
         type="submit"
         className="bg-purple-900 text-white px-4 py-1 rounded hover:bg-purple-800"

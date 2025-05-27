@@ -1,6 +1,8 @@
+import ServerUrl from "../../ultilities/serverUrl";
+
 export async function signupAction(email: string, name: string, password: string) {
     try {
-        const response = await fetch('/api/signup', {
+        const response = await fetch(ServerUrl.signup, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

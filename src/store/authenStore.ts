@@ -5,7 +5,6 @@ type AuthenStore = {
     authenInfor: AuthenInfor,
     setAuthenInfor: (authenInfor: AuthenInfor) => void,
     logout: () => void
-
 }
 
 const initialState: AuthenInfor = {
@@ -17,7 +16,7 @@ const initialState: AuthenInfor = {
 
 const authenStore: StoreApi<AuthenStore> = createStore(set => ({
     authenInfor: initialState,
-    setAuthenInfor: (authenInfor: AuthenInfor) => set(() => ({ authenInfor: { ...authenInfor, isLogin: true }, })),
+    setAuthenInfor: (authInfor: AuthenInfor) => set(() => ({ authenInfor: { ...authInfor, isLogin: true }, })),
     logout: () => set(() => ({
         authenInfor: initialState
     }))
