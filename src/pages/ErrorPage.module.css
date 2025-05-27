@@ -1,0 +1,25 @@
+.container {
+    padding: 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.detail {
+    margin: 0.5rem 0;
+}
+
+.stack {
+    margin-top: 1rem;
+    background: #fff0f0;
+    padding: 1rem;
+    border-radius: 4px;
+    font-family: monospace;
+    white-space: pre-wrap;
+}
