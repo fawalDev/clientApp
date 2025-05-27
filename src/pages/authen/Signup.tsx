@@ -4,14 +4,14 @@ import type IAuthRes from '../../models/interfaces/response/fulfill/authenRes';
 import React, { useState } from 'react';
 import { useStore } from 'zustand';
 
-import Input from '../../components/Input';
+import Input from '../../components/UI/Input';
 import { signupAction } from './signupAction';
 import authenStore from '../../store/authenStore';
 import { setJWT, setUserInfor } from '../../ultilities/jwtToken';
 import useTwoWayBinding from '../../hooks/useTwoWayBinding';
 import useValidate from '../../hooks/useValidate';
 import { isNotNull } from '../../ultilities/inputValidation/validate';
-import ErrorMsg from '../../components/ErrorMsg';
+import ErrorMsg from '../../components/UI/ErrorMsg';
 import { useNavigate } from 'react-router';
 
 

@@ -1,0 +1,117 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 60;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.modal {
+  position: fixed;
+  top: 2.5vh;
+  left: 2.5vw;
+  width: 95%;
+  height: max-content;
+  max-height: 85vh;
+  overflow: auto;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 70;
+  animation: slide-down 300ms ease-out forwards;
+}
+
+
+
+
+
+
+
+
+/* Animation */
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-3rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.hidden {
+  display: none;
+}
+
+.fading-hidden {
+  animation: fade-hidden 300ms ease-out forwards;
+}
+
+@keyframes fade-hidden {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    display: none;
+  }
+}
+
+
+
+.close-icon {
+  position: fixed;
+  top: 1rem;               /* top-4 = 1rem */
+  right: 2.5rem;           /* right-10 = 2.5rem */
+  font-size: 1.875rem;     /* text-3xl = 1.875rem */
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+
+
+
+/* Responsive for large screens */
+@media (min-width: 1024px) {
+  .close-icon {
+    top: 1.75rem;           /* lg:top-7 = 1.75rem */
+    font-size: 2.25rem;     /* lg:text-4xl = 2.25rem */
+  }
+}
+
+
+
+
+
+
+/* Responsive design */
+
+@media (min-width: 768px) {
+  .modal {
+    top: 5vh;
+    height: max-content;
+    max-height: 50rem;
+    padding: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .modal {
+    top: 10vh;
+    width: 60rem;
+    height: 80vh;
+    height: max-content;
+    left: calc(50% - 30rem);
+    padding: 5rem;
+  }
+}

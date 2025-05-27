@@ -1,4 +1,4 @@
-import Button from "../../components/Button"
+import Button from "../../components/UI/Button"
 import PostForm from "./comps/postForm"
 
 export default function PostPage() {
