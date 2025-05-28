@@ -1,27 +1,24 @@
-import React, { type PropsWithChildren } from 'react';
+import type { InputHTMLAttributes, PropsWithChildren } from "react"
 
 
-interface props extends
-    PropsWithChildren,
-    React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
-    label: string,
-    value: string,
-    isRed?: boolean,
-}
 
-export default function Input({ label, type, value, onChange, name, isRed = false, children }: props) {
+type props = { label: string }
+    & InputHTMLAttributes<HTMLInputElement>
+    & PropsWithChildren
+
+export default function Input(props: props) {
+    const { label } = props;
+
     return (
         <div className="mb-4">
-            <label htmlFor={name} className="block text-sm text-gray-700 mb-1">{label}</label>
-            <input
-                id={name}
-                type={type}
-                name={name}
-                value={value}
-                onChange={onChange}
-                className={`w-full border  p-2 rounded outline-none ${isRed ? 'border-red-300 bg-red-100' : ''}`}
-            />
-            {children}
+            <label htmlFor={label} className="block text-sm font-medium text-gray-700 mb-1">
+                {label}
+            </label>
+            <input id={label} className={props.className || `w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                type={props.type}
+                name={props.name}
+                value={props.value} onChange={props.onChange} />
+            {props.children}
         </div>
-    );
+    )
 }

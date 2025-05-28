@@ -1,10 +1,10 @@
 import type { StoreApi } from 'zustand'
-import type Res from '../../../models/Response'
-import type ErrorRes from '../../../models/ErrorResponse'
 
 import { createStore } from 'zustand'
 
 import modalStyle from '../Modal.module.css'
+import type Res from '../../../models/response'
+import type ErrorRes from '../../../models/errorResponse'
 
 
 type ModalType = 'inform' | 'error'

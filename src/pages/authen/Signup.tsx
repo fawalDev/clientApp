@@ -1,5 +1,5 @@
 import type Res from '../../models/response';
-import type IAuthRes from '../../models/interfaces/response/fulfill/authenRes';
+import type IAuthRes from '../../interfaces/response/fulfill/authenRes';
 
 import React, { useState } from 'react';
 import { useStore } from 'zustand';

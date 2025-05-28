@@ -1,5 +1,5 @@
 import type Res from '../../models/response';
-import type IAuthRes from '../../models/interfaces/response/fulfill/authenRes';
+import type IAuthRes from '../../interfaces/response/fulfill/authenRes';
 
 import { useState } from 'react';
 
@@ -53,7 +53,7 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="border border-purple-300 p-6 rounded w-full max-w-md mx-auto mt-10">
-      <Input isRed
+      <Input className='w-full border p-2 rounded outline-none border-red-300 bg-red-100'
         label="YOUR E-MAIL"
         name="email"
         value={email}
@@ -61,7 +61,7 @@ export default function LoginForm() {
         {isSubmited && emailErrorMsg && < ErrorMsg msg={emailErrorMsg} />}
       </Input>
 
-      <Input isRed
+      <Input className='w-full border p-2 rounded outline-none border-red-300 bg-red-100'
         label="PASSWORD"
         type="password"
         name="password"
@@ -72,8 +72,7 @@ export default function LoginForm() {
 
       <button
         type="submit"
-        className="bg-purple-900 text-white px-4 py-1 rounded hover:bg-purple-800"
-      >
+        className="bg-purple-900 text-white px-4 py-1 rounded hover:bg-purple-800">
         LOGIN
       </button>
     </form>

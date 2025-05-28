@@ -1,6 +1,6 @@
 import useTwoWayBinding from "../../../hooks/useTwoWayBinding";
 
-export default function PostForm() {
+export default function Search() {
     const [value, onChangeValue] = useTwoWayBinding('');
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

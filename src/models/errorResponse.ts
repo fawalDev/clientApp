@@ -1,4 +1,4 @@
-import type { IRes } from "./interfaces/response";
+import type { IRes } from "../interfaces/response";
 
 
 
