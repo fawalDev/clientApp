@@ -12,8 +12,7 @@ export async function signupAction(email: string, name: string, password: string
         if (!response.ok) {
             throw new Error('Signup failed');
         }
-        const data = await response.json();
-        return data;
+        return await response.json();
     } catch (error) {
         alert(error);
     }

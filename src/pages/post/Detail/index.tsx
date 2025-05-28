@@ -31,7 +31,7 @@ function Post({ post }: props) {
 
             {/* Date */}
             <p className="text-sm text-gray-700 mt-1">
-                Created by <span className="font-semibold">on {post.postDate}</span>
+                Created by <span className="font-semibold">on {post.createdAt}</span>
             </p>
 
             {/* Line Separator */}

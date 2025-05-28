@@ -1,19 +1,14 @@
-import type Res from '../../models/response';
-import type IAuthRes from '../../interfaces/response/fulfill/authenRes';
-
 import { useState } from 'react';
 
 import Input from '../../components/UI/Input';
-import { useStore } from 'zustand';
 
-import { loginAction } from './loginAction';
-import authenStore from '../../store/authenStore';
-import { setJWT, setUserInfor } from '../../ultilities/jwtToken';
 import useTwoWayBinding from '../../hooks/useTwoWayBinding';
 import ErrorMsg from '../../components/UI/ErrorMsg';
 import useValidate from '../../hooks/useValidate';
 import { isNotNull } from '../../ultilities/inputValidation/validate';
-import { useNavigate } from 'react-router';
+import { useActionData, useSubmit } from 'react-router';
+import type ErrorRes from '../../models/errorResponse';
+import type IAuthError from '../../interfaces/response/error/authError';
 
 
 
@@ -22,16 +17,17 @@ export default function LoginForm() {
   const [email, onchangeEmail] = useTwoWayBinding('')
   const [password, onchangePassword] = useTwoWayBinding('')
 
-  // validate
+  // client validate
   const emailErrorMsg = useValidate('Email', email, [isNotNull])
   const passwordErrorMsg = useValidate('Password', password, [isNotNull])
 
+  // server validate
+  const actionData = useActionData<ErrorRes<IAuthError>>()
 
-  const setAuthenInfor = useStore(authenStore, (state) => state.setAuthenInfor);
 
 
   const [isSubmited, setIsSubmited] = useState(false)
-  const navigate = useNavigate()
+  const submit = useSubmit()
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmited(true)
@@ -40,15 +36,10 @@ export default function LoginForm() {
     if (emailErrorMsg || passwordErrorMsg)
       return
 
-    loginAction(email, password)
-      .then((data: Res<IAuthRes>) => {
-        // dispatch state action in zustand store
-        setAuthenInfor(data.infor?.userInfor!);
-        // store JWT in localStorage
-        setJWT(data.infor?.jwtToken || '');
-        setUserInfor(data.infor?.userInfor!)
-        navigate('/'); // redirect to home page after login
-      });
+    submit({ email, password }, {
+      method: 'post'
+    })
+    
   };
 
   return (
@@ -57,7 +48,9 @@ export default function LoginForm() {
         label="YOUR E-MAIL"
         name="email"
         value={email}
-        onChange={onchangeEmail}>
+        onChange={onchangeEmail}
+        autoFocus
+      >
         {isSubmited && emailErrorMsg && < ErrorMsg msg={emailErrorMsg} />}
       </Input>
 
@@ -69,6 +62,10 @@ export default function LoginForm() {
         onChange={onchangePassword}>
         {isSubmited && passwordErrorMsg && < ErrorMsg msg={passwordErrorMsg} />}
       </Input>
+
+      {actionData?.cause?.credential
+        && <ErrorMsg msg={actionData.cause.credential} />
+      }
 
       <button
         type="submit"

@@ -19,16 +19,17 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Suspense fallback={<Fallback />}><Post /></Suspense>,
-        loader: args => import('./pages/post/Posts/loader').then(i => i.loader(args))
+        loader: () => import('./pages/post/Posts/loader').then(i => i.loader())
       },
       {
-        path: 'detail/:id',
+        path: 'post/:id',
         element: <Suspense fallback={<Fallback />}><Detail /></Suspense>,
         loader: args => import('./pages/post/Detail/loader').then(i => i.loader(args))
       },
       {
         path: '/login',
-        element: <Suspense fallback={<Fallback />}><Login /></Suspense>
+        element: <Suspense fallback={<Fallback />}><Login /></Suspense>,
+        action: args => import('./pages/authen/loginAction').then(i => i.loginAction(args))
       },
       {
         path: '/signup',

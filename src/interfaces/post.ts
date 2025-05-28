@@ -3,4 +3,6 @@ export default interface IPost {
     title: string;
     content: string;
     imgUrl: string;
+    createdAt: string;
+    updatedAt: string;
 }
