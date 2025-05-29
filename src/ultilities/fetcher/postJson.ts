@@ -1,28 +1,35 @@
 import type { ActionFunctionArgs } from "react-router";
-import Res from "../../models/response";
 import ErrorRes from "../../models/errorResponse";
 
 
-export async function postJson<T extends object>(args: ActionFunctionArgs, url: string): Promise<Res<T> | ErrorRes<T> | undefined> {
+/**
+ * MUST USE useSubmit() with encType:'application/json'
+ *  exp: 
+ * const submit = useSubmit();
+ * submit({ target }, {
+      method: 'post', encType:'application/json'
+    })
+ */
+
+export async function postJson<T extends object>(args: ActionFunctionArgs, url: string, actionInDone?: (jsonRes: T) => any, actionInFailed?: (jsonRes: ErrorRes<T>) => any)
+    : Promise<T | ErrorRes<T> | undefined> {
     try {
-        const formData = Object.fromEntries((await args.request.formData()).entries())
-        // console.log(args.request.body)
+        // const formData = Object.fromEntries((await args.request.formData()).entries())
+        const data = await args.request.json()
+
         const res = await fetch(url, {
             method: args.request.method,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
+            headers: args.request.headers,
+            body: JSON.stringify(data)
         });
-        const data = await res.json()
-        if (!res.ok) 
-            return new ErrorRes<T>(data?.message, res.status, data?.cause);
-        
+        const json = await res.json()
+        if (res.ok)
+            return actionInDone ? actionInDone(json) : json as T;
 
-        return new Res<T>(data?.message, res.status, data);
+        return actionInFailed ? actionInFailed(json) : json as ErrorRes<T>;
     } catch (error) {
         alert(error);
         console.error(error)
-        
+
     }
 }

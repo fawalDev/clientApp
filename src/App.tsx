@@ -33,7 +33,8 @@ const router = createBrowserRouter([
       },
       {
         path: '/signup',
-        element: <Suspense fallback={<Fallback />}><Signup /></Suspense>
+        element: <Suspense fallback={<Fallback />}><Signup /></Suspense>,
+        action: args => import('./pages/authen/signupAction').then(i => i.signupAction(args))
       },
 
     ]

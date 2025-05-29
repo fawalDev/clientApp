@@ -1,19 +1,25 @@
-import ServerUrl from "../../ultilities/serverUrl";
+import type IAuthRes from "../../interfaces/response/fulfill/authenRes";
 
-export async function signupAction(email: string, name: string, password: string) {
-    try {
-        const response = await fetch(ServerUrl.signup, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, name, password })
-        });
-        if (!response.ok) {
-            throw new Error('Signup failed');
-        }
-        return await response.json();
-    } catch (error) {
-        alert(error);
+import { redirect, type ActionFunctionArgs } from "react-router";
+
+import ServerUrl from "../../ultilities/serverUrl";
+import { postJson } from "../../ultilities/fetcher/postJson";
+import authenStore from "../../store/authenStore";
+import { setJWT, setUserInfor } from "../../ultilities/jwtToken";
+
+
+
+export async function signupAction(args: ActionFunctionArgs) {
+    const setAuthenInfor = authenStore.getState().setAuthenInfor
+
+    const actionInDone = (jsonRes: IAuthRes) => {
+        // dispatch state action in zustand store
+        setAuthenInfor(jsonRes?.userInfor!);
+        // store JWT in localStorage
+        setJWT(jsonRes?.jwtToken || '');
+        setUserInfor(jsonRes?.userInfor!)
+        return redirect('/');
     }
+
+    return await postJson(args, ServerUrl.signup, actionInDone)
 }

@@ -37,12 +37,13 @@ export default function LoginForm() {
       return
 
     submit({ email, password }, {
-      method: 'post'
+      method: 'post', encType:'application/json'
     })
     
   };
 
   return (
+    
     <form onSubmit={handleSubmit} className="border border-purple-300 p-6 rounded w-full max-w-md mx-auto mt-10">
       <Input className='w-full border p-2 rounded outline-none border-red-300 bg-red-100'
         label="YOUR E-MAIL"
