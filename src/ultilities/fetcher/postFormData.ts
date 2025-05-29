@@ -4,31 +4,25 @@ import { getJWT } from "../jwtToken";
 
 
 /**
- * MUST USE useSubmit() with encType:'application/json'
- *  exp: 
- * const submit = useSubmit();
- * submit({ target }, {
-      method: 'post', encType:'application/json'
-    })
+ * use with <Form> or submit default - encType:'multipart/form-data'
  */
 
-export async function postJson<T extends object>(args: ActionFunctionArgs, url: string, includeToken?: 'includeToken' | 'noneToken', actionInDone?: (jsonRes: T) => any, actionInFailed?: (jsonRes: ErrorRes<T>) => any)
+export async function postFormData<T extends object>(args: ActionFunctionArgs, url: string, includeToken?: 'includeToken' | 'noneToken', actionInDone?: (jsonRes: T) => any, actionInFailed?: (jsonRes: ErrorRes<T>) => any)
     : Promise<T | ErrorRes<T> | undefined> {
     try {
-        const data = await args.request.json()
+        const formData = await args.request.formData()
         const headersInit: HeadersInit = {
             'authorization': (includeToken === 'includeToken')
                 ? getJWT() || ''
                 : '',
-            'Content-Type': 'application/json',
+            // 'content-type': 'multipart/form-data',
             ...args.request.headers
         }
-
 
         const res = await fetch(url, {
             method: args.request.method,
             headers: headersInit,
-            body: JSON.stringify(data)
+            body: formData,
         });
         const json = await res.json()
         if (res.ok)

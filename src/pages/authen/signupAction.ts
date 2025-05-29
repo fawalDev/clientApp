@@ -21,5 +21,5 @@ export async function signupAction(args: ActionFunctionArgs) {
         return redirect('/');
     }
 
-    return await postJson(args, ServerUrl.signup, actionInDone)
+    return await postJson(args, ServerUrl.signup, 'noneToken', actionInDone)
 }

@@ -21,6 +21,6 @@ export async function loginAction(args: ActionFunctionArgs) {
     return redirect('/');
   }
 
-  return  await postJson<IAuthRes>(args, ServerUrl.login, actionInDone)
-  
+  return await postJson<IAuthRes>(args, ServerUrl.login, 'noneToken', actionInDone)
+
 }

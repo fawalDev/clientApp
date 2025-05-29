@@ -15,7 +15,7 @@ export default function PostForm() {
         setTimeout(() =>
             setHidden(modalStyle['hidden'])
             , 300)
-    }, [])
+    }, [setHidden])
 
     return (
 
@@ -25,18 +25,18 @@ export default function PostForm() {
                     New Post
                 </h2>
 
-                <Form method="post" className="space-y-4">
+                <Form method="post" encType="multipart/form-data" className="space-y-4">
                     {/* Title */}
-                    <Input label="TITLE" type="text" placeholder="New Post Title" />
+                    <Input label="TITLE" type="text" name="title" placeholder="New Post Title" />
 
                     {/* Image */}
-                    <Input label="IMAGE" type="file" accept="image/*" >
+                    <Input label="IMAGE" type="file" name="image" accept="image/*" >
                         <p className="text-sm text-gray-500 mt-1">Please choose an image.</p>
                     </Input>
 
                     <div className="h-14"></div>
                     {/* Content */}
-                    <TextArea label="CONTENT" placeholder="Write your post content here..." rows={4} />
+                    <TextArea label="CONTENT" name="content" placeholder="Write your post content here..." rows={4} />
 
                     {/* Buttons */}
                     <div className="flex justify-end space-x-4 mt-6">

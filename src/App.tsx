@@ -19,7 +19,8 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Suspense fallback={<Fallback />}><Post /></Suspense>,
-        loader: () => import('./pages/post/Posts/loader').then(i => i.loader())
+        loader: () => import('./pages/post/Posts/loader').then(i => i.loader()),
+        action: args => import('./pages/post/Posts/postFormAction').then(i => i.postFormAction(args))
       },
       {
         path: 'post/:id',
