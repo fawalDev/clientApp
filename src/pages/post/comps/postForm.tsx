@@ -5,6 +5,7 @@ import modalStore from "../../../components/modal/store";
 
 import modalStyle from '../../../components/modal/Modal.module.css'
 import { useCallback } from "react";
+import { Form } from "react-router";
 
 export default function PostForm() {
     const setHidden = useStore(modalStore, (state) => state.setHidden);
@@ -24,7 +25,7 @@ export default function PostForm() {
                     New Post
                 </h2>
 
-                <form className="space-y-4">
+                <Form method="post" className="space-y-4">
                     {/* Title */}
                     <Input label="TITLE" type="text" placeholder="New Post Title" />
 
@@ -47,7 +48,7 @@ export default function PostForm() {
                             ACCEPT
                         </button>
                     </div>
-                </form>
+                </Form>
             </div>
         </div>
     );

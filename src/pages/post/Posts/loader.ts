@@ -9,6 +9,6 @@ export type postLoader = {
 
 export function loader(): postLoader {
     return {
-        postList: getDefer<IPost[]>(ServerUrl.post)
+        postList: getDefer<IPost[]>(ServerUrl.post, 'includeToken')
     }
 }

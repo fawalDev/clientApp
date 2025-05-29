@@ -1,6 +1,15 @@
-export default async function getDefer<T>(url: string): Promise<T | null> {
+import { getJWT } from "../jwtToken";
+
+
+export default async function getDefer<T>(url: string, includeToken?: 'includeToken'): Promise<T | null> {
+    const headerInit: HeadersInit = {
+        'authorization': includeToken ? getJWT() || '' : ''
+    }
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: headerInit
+        }
+        );
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
