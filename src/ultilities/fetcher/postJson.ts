@@ -23,7 +23,7 @@ export async function postJson<T extends object>(args: ActionFunctionArgs, url: 
         headersInit = {
             ...headersInit,
             // 'content-type': 'application/json',
-            ...args.request.headers
+            ...Object.fromEntries(args.request.headers.entries())
         }
 
         const res = await fetch(url, {

@@ -1,8 +1,6 @@
-import type { detailLoader } from "../Detail/loader";
-
 import { useStore } from "zustand";
-import { useCallback, useEffect } from "react";
-import { Form, useRouteLoaderData } from "react-router";
+import { useCallback, useEffect, useState } from "react";
+import { Form } from "react-router";
 
 import Input from "../../../components/UI/Input";
 import TextArea from "../../../components/UI/textArea";
@@ -30,8 +28,16 @@ export default function PostForm({ isEdit = false }: props) {
     let content: any = useStore(postStore, state => state.post.content)
     let setContent: any = useStore(postStore, state => state.setContent)
 
-    useEffect(()=>{
+    const [defTitle, setDefTitle] = useState('')
+    const [defContent, setDefContent] = useState('');
+
+    const postId = useStore(postStore, state => state.edit.postId)
+    useEffect(() => {
         getDefer<IPost>(ServerUrl.post + '/' + postId, 'includeToken')
+            .then(post => {
+                setDefTitle(post?.title || '')
+                setDefContent(post?.content || '')
+            })
     })
     if (isEdit) {
         title = undefined
@@ -54,7 +60,8 @@ export default function PostForm({ isEdit = false }: props) {
                 <Form method={isEdit ? 'put' : 'post'} encType="multipart/form-data" className="space-y-4">
                     {/* Title */}
                     <Input label="TITLE" type="text" name="title" placeholder="New Post Title"
-                        value={title} onChange={e => setTitle(e.target.value)} />
+                        value={title} onChange={e => setTitle(e.target.value)}
+                        defaultValue={defTitle} />
 
                     {/* Image */}
                     <Input label="IMAGE" type="file" name="image" accept="image/*" >
@@ -64,7 +71,8 @@ export default function PostForm({ isEdit = false }: props) {
                     <div className="h-14"></div>
                     {/* Content */}
                     <TextArea label="CONTENT" name="content" placeholder="Write your post content here..." rows={4}
-                        value={content} onChange={e => setContent(e.target.value)} />
+                        value={content} onChange={e => setContent(e.target.value)}
+                        defaultValue={defContent} />
 
                     {/* Buttons */}
                     <div className="flex justify-end space-x-4 mt-6">

@@ -4,6 +4,7 @@ import type IPost from "../../../interfaces/post";
 import { Link, useFetcher } from "react-router";
 import { useStore } from "zustand";
 import modalStore from "../../../components/modal/store";
+import postStore from "../store";
 
 type props = {
     post: IPost
@@ -14,7 +15,9 @@ export default function PostCard({ post }: props) {
     const createdAt = new Date(post.createdAt || '').toDateString()
 
     const showModal = useStore(modalStore, state => state.show)
+    const setEdit = useStore(postStore, state => state.setEdit)
     const showEditModal = () => {
+        setEdit(post._id)
         showModal<PostFormModalType>('editPost')
     }
 
@@ -34,14 +37,14 @@ export default function PostCard({ post }: props) {
                 </Link>
                 <button onClick={showEditModal}
                     className="text-purple-800 font-medium hover:underline">
-                EDIT
-            </button>
-            <fetcher.Form method="delete" action={`/post/delete/${post._id}`}>
-                <button className="text-red-600 font-medium hover:underline">
-                    DELETE
+                    EDIT
                 </button>
-            </fetcher.Form>
-        </div>
+                <fetcher.Form method="delete" action={`/post/delete/${post._id}`}>
+                    <button className="text-red-600 font-medium hover:underline">
+                        DELETE
+                    </button>
+                </fetcher.Form>
+            </div>
         </div >
     );
 }
