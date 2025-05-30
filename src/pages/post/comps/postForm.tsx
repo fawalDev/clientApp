@@ -1,6 +1,9 @@
+import type IPost from "../../../interfaces/post";
+
+
 import { useStore } from "zustand";
 import { useCallback, useEffect, useState } from "react";
-import { Form } from "react-router";
+import { Form, useActionData } from "react-router";
 
 import Input from "../../../components/UI/Input";
 import TextArea from "../../../components/UI/textArea";
@@ -9,7 +12,9 @@ import modalStore from "../../../components/modal/store";
 import postStore from "../store";
 import getDefer from "../../../ultilities/fetcher/getDefer";
 import ServerUrl from "../../../ultilities/serverUrl";
-import type IPost from "../../../interfaces/post";
+import type ErrorRes from "../../../models/errorResponse";
+import type IPostError from "../../../interfaces/response/error/postError";
+import ErrorMsg from "../../../components/UI/ErrorMsg";
 
 
 type props = {
@@ -20,6 +25,7 @@ type props = {
 //* PostForm is used for both creating and editing posts.
 export default function PostForm({ isEdit = false }: props) {
     const hideModal = useStore(modalStore, (state) => state.hide);
+    const actionData: ErrorRes<IPostError> | undefined = useActionData()
 
 
     let title: any = useStore(postStore, state => state.post.title)
@@ -28,23 +34,29 @@ export default function PostForm({ isEdit = false }: props) {
     let content: any = useStore(postStore, state => state.post.content)
     let setContent: any = useStore(postStore, state => state.setContent)
 
+
+
+    /*
+     if `edit`, ignore all state above & fetch post detail to pre-population    */
+    if (isEdit) {
+        title = undefined; setTitle = () => undefined; content = undefined; setContent = () => undefined;
+    }
+
     const [defTitle, setDefTitle] = useState('')
     const [defContent, setDefContent] = useState('');
 
     const postId = useStore(postStore, state => state.edit.postId)
+
+    /*
+     fetch post detail to pre-population    */
     useEffect(() => {
         getDefer<IPost>(ServerUrl.post + '/' + postId, 'includeToken')
             .then(post => {
                 setDefTitle(post?.title || '')
                 setDefContent(post?.content || '')
             })
-    })
-    if (isEdit) {
-        title = undefined
-        setTitle = () => undefined
-        content = undefined
-        setContent = () => undefined
-    }
+    }, [postId])
+
     const handleCancel = useCallback(() => {
         hideModal()
     }, [hideModal])
@@ -61,18 +73,27 @@ export default function PostForm({ isEdit = false }: props) {
                     {/* Title */}
                     <Input label="TITLE" type="text" name="title" placeholder="New Post Title"
                         value={title} onChange={e => setTitle(e.target.value)}
-                        defaultValue={defTitle} />
+                        defaultValue={defTitle}
+                    >
+                        {actionData?.cause?.title && <ErrorMsg msg={actionData?.cause.title} />}
+                    </Input>
 
                     {/* Image */}
                     <Input label="IMAGE" type="file" name="image" accept="image/*" >
                         <p className="text-sm text-gray-500 mt-1">Please choose an image.</p>
+                        {actionData?.cause?.image && <ErrorMsg msg={actionData?.cause.image} />}
                     </Input>
 
                     <div className="h-14"></div>
                     {/* Content */}
                     <TextArea label="CONTENT" name="content" placeholder="Write your post content here..." rows={4}
                         value={content} onChange={e => setContent(e.target.value)}
-                        defaultValue={defContent} />
+                        defaultValue={defContent}
+                    >
+                        {actionData?.cause?.content && <ErrorMsg msg={actionData?.cause.content} />}
+                    </TextArea>
+
+                    {isEdit && <input type="hidden" name="id" value={postId} />}
 
                     {/* Buttons */}
                     <div className="flex justify-end space-x-4 mt-6">

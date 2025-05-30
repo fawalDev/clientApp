@@ -11,9 +11,15 @@ export async function postFormAction(args: ActionFunctionArgs) {
         hideModal()
     }
 
-    const actionInFailed = (jsonRes: ErrorRes) => {
+    const actionInFailed = (errorRes: ErrorRes) => {
+        if (errorRes.status === 401)
+            return showModal('error', errorRes)
+        return errorRes
+    }
+
+    const actionInError = (jsonRes: Error) => {
         showModal('error', jsonRes)
     }
 
-    return await postFormData(args, ServerUrl.post, 'includeToken', actionInDone, actionInFailed)
+    return await postFormData(args, ServerUrl.post, 'includeToken', actionInDone, actionInFailed, actionInError)
 }

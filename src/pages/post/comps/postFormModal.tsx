@@ -9,20 +9,14 @@ import type { PostFormModalType } from "../types/PostFormModalType";
 export default function PostFormModal() {
     const type = useStore(modalStore, state => state.type) as PostFormModalType
 
-    if (type === 'createPost')
-        return (
-            <Modal>
-                <PostForm />
-            </Modal>
-        )
-
-    else if (type === 'editPost')
-        return (
-            <Modal>
-                <PostForm isEdit />
-            </Modal>
-        )
-
-    else
+    if (type !== 'createPost' && type !== 'editPost')
         return <></>
+
+    const isEdit = type === 'editPost' // true or false
+    return (
+        <Modal>
+            <PostForm isEdit={isEdit} />
+        </Modal>
+    )
+
 }

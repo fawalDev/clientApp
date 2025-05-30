@@ -6,7 +6,6 @@ import { createStore } from "zustand";
 type PostStore = {
     post: IPost
     edit: {
-        isEdit: boolean
         postId?: string
     }
     resetPost: () => void
@@ -22,7 +21,6 @@ const initialPost: IPost = { _id: '', content: '', imgUrl: '', title: '', }
 const postStore = createStore<PostStore>(set => ({
     post: initialPost,
     edit: {
-        isEdit: false,
         postId: undefined
     },
 
@@ -36,12 +34,12 @@ const postStore = createStore<PostStore>(set => ({
     // for create post
     setPost: () => set(state => ({
         ...state,
-        edit: { isEdit: false, postId: undefined },
+        edit: { postId: undefined },
     })),
     // for edit post
     setEdit: (postId?: string) => set(state => ({
         ...state,
-        edit: { isEdit: true, postId: postId }
+        edit: { postId: postId }
     })),
 
 }))
