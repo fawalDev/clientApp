@@ -1,5 +1,9 @@
-import { Link, useFetcher } from "react-router";
+import type { PostFormModalType } from "../types/PostFormModalType";
 import type IPost from "../../../interfaces/post";
+
+import { Link, useFetcher } from "react-router";
+import { useStore } from "zustand";
+import modalStore from "../../../components/modal/store";
 
 type props = {
     post: IPost
@@ -7,7 +11,14 @@ type props = {
 
 export default function PostCard({ post }: props) {
     const fetcher = useFetcher()
-    const createdAt = new Date(post.createdAt).toDateString()
+    const createdAt = new Date(post.createdAt || '').toDateString()
+
+    const showModal = useStore(modalStore, state => state.show)
+    const showEditModal = () => {
+        showModal<PostFormModalType>('editPost')
+    }
+
+
     return (
         <div className="border border-purple-700 rounded p-4 mb-4 w-full max-w-xl">
             <p className="text-sm text-gray-600 mb-1">
@@ -21,17 +32,17 @@ export default function PostCard({ post }: props) {
                     className="text-purple-800 font-medium hover:underline">
                     VIEW
                 </Link>
-                <Link to={`/edit/${post._id}`}
+                <button onClick={showEditModal}
                     className="text-purple-800 font-medium hover:underline">
-                    EDIT
-                </Link>
-                <fetcher.Form method="delete" action={`/post/delete/${post._id}`}>
-                    <button className="text-red-600 font-medium hover:underline">
-                        DELETE
-                    </button>
-                </fetcher.Form>
-            </div>
+                EDIT
+            </button>
+            <fetcher.Form method="delete" action={`/post/delete/${post._id}`}>
+                <button className="text-red-600 font-medium hover:underline">
+                    DELETE
+                </button>
+            </fetcher.Form>
         </div>
+        </div >
     );
 }
 

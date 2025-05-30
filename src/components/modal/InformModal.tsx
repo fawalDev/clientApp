@@ -9,12 +9,12 @@ import modalStore from "./store"
 import Button from "../UI/Button"
 
 import defFnc from "./ulties/defaultButtonAction"
-import type { PropsWithChildren } from "react"
 
 
 
 
-export default function InformModal({ truthyFnc = defFnc, falsyFnc = defFnc, oncloseFnc, children }: IModalImplementProps & PropsWithChildren) {
+export default function InformModal({ truthyFnc = defFnc, falsyFnc = defFnc, oncloseFnc }: IModalImplementProps) {
+    const message = useStore(modalStore, state => state.resonse.message)
 
     const type = useStore(modalStore, state => state.type)
     if (type !== 'inform')
@@ -23,7 +23,7 @@ export default function InformModal({ truthyFnc = defFnc, falsyFnc = defFnc, onc
     return (
         <Modal onCloseFnc={oncloseFnc}>
             <div className={informModalStyle["container"]}>
-                <div>{children}</div>
+                <span>{message}</span>
                 <div className={informModalStyle["actions"]}>
                     <span><Button onClick={truthyFnc}>Ok</Button></span>
                     <span><Button isBgWhite onClick={falsyFnc}>Cancel</Button></span>

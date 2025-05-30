@@ -1,21 +1,28 @@
 import { useStore } from "zustand";
 import Modal from "../../../components/modal/Modal";
 import PostForm from "./postForm";
-import modalStore, { type ModalType } from "../../../components/modal/store";
+import modalStore from "../../../components/modal/store";
+import type { PostFormModalType } from "../types/PostFormModalType";
 
-type PostFormModalType = ModalType | 'postForm'
+
 
 export default function PostFormModal() {
     const type = useStore(modalStore, state => state.type) as PostFormModalType
-    const setType = useStore(modalStore, state => state.setType)
-    setType<PostFormModalType>('postForm')
 
-    if (type !== 'postForm')
+    if (type === 'createPost')
+        return (
+            <Modal>
+                <PostForm />
+            </Modal>
+        )
+
+    else if (type === 'editPost')
+        return (
+            <Modal>
+                <PostForm isEdit />
+            </Modal>
+        )
+
+    else
         return <></>
-
-    return (
-        <Modal>
-            <PostForm />
-        </Modal>
-    )
 }

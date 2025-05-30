@@ -1,14 +1,19 @@
-import { redirect, type ActionFunctionArgs } from "react-router";
+import type { ActionFunctionArgs } from "react-router";
 import { postFormData } from "../../../ultilities/fetcher/postFormData";
 import ServerUrl from "../../../ultilities/serverUrl";
 import modalStore from "../../../components/modal/store";
+import type ErrorRes from "../../../models/errorResponse";
 
 export async function postFormAction(args: ActionFunctionArgs) {
     const hideModal = modalStore.getState().hide
+    const showModal = modalStore.getState().show
     const actionInDone = () => {
         hideModal()
-        return redirect('/')
     }
 
-    return await postFormData(args, ServerUrl.post, 'includeToken', actionInDone)
+    const actionInFailed = (jsonRes: ErrorRes) => {
+        showModal('error', jsonRes)
+    }
+
+    return await postFormData(args, ServerUrl.post, 'includeToken', actionInDone, actionInFailed)
 }

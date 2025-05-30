@@ -15,7 +15,7 @@ interface IModalStore {
     resonse: Res | ErrorRes,
     // type define the modal should be rendered <InformModal> or <ErrorModal>
     type: string,
-    show: () => void
+    show: <T extends string = ModalType>(type?: T, responseData?: Res | ErrorRes) => void
     hide: () => void
     setResponse: (res: Res | ErrorRes) => void
     setType: <T extends string = ModalType>(type: T) => void
@@ -25,7 +25,12 @@ const modalStore: StoreApi<IModalStore> = createStore(set => ({
     resonse: { message: '', name: '' },
     type: 'inform',
 
-    show: () => set(state => ({ ...state, hidden: '' })),
+    show: (type, responseData) => set(state => ({
+        ...state,
+        hidden: '',
+        type: type || state.type,
+        resonse: responseData || state.resonse
+    })),
     hide: () => {
         set(state => ({ ...state, hidden: modalStyle['fading-hidden'] }))
         setTimeout(() =>

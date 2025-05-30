@@ -32,7 +32,7 @@ function Post({ post }: props) {
 
             {/* Date */}
             <p className="text-sm text-gray-700 mt-1">
-                Created by <span className="font-semibold">on {post.createdAt}</span>
+                Created by on <span className="font-semibold">{new Date(post.createdAt || '').toDateString()}</span>
             </p>
 
             {/* Line Separator */}

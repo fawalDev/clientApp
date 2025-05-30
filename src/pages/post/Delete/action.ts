@@ -1,14 +1,30 @@
 import type { ActionFunctionArgs } from "react-router";
-import { postJson } from "../../../ultilities/fetcher/postJson";
 import ServerUrl from "../../../ultilities/serverUrl";
+import { postFormData } from "../../../ultilities/fetcher/postFormData";
+import type ErrorRes from "../../../models/errorResponse";
+import modalStore from "../../../components/modal/store";
+
+
 
 export async function deleteAction(args: ActionFunctionArgs) {
     const id = args.params['id']
-    const url = ServerUrl.post + '/' + id
+    const deleteUrl = ServerUrl.post + '/' + id
+
+    const showModal = modalStore.getState().show
+    const setType = modalStore.getState().setType
+    const setResponse = modalStore.getState().setResponse
 
     const actionInDone = () => {
-        return null
+        setType('inform')
+        setResponse({ message: 'Delete post successfully' })
+        showModal()
     }
 
-    return postJson(args, url, 'includeToken', actionInDone)
+    const actionInFailed = (jsonRes: ErrorRes) => {
+        setType('error')
+        setResponse(jsonRes)
+        showModal()
+    }
+
+    return postFormData(args, deleteUrl, 'includeToken', actionInDone, actionInFailed)
 }

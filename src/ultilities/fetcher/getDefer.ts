@@ -1,13 +1,15 @@
 import { getJWT } from "../jwtToken";
 
 
-export default async function getDefer<T>(url: string, includeToken?: 'includeToken'): Promise<T | null> {
-    const headerInit: HeadersInit = {
-        'authorization': includeToken ? getJWT() || '' : ''
-    }
+export default async function getDefer<T>(url: string, includeToken?: 'includeToken' | 'noneToken'): Promise<T | null> {
+
     try {
+        const headersInit: Record<string, any> = {}
+        if (includeToken === 'includeToken')
+            headersInit['authorization'] = getJWT() || ''
+
         const response = await fetch(url, {
-            headers: headerInit
+            headers: headersInit
         }
         );
 

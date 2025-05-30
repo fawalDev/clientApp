@@ -11,10 +11,12 @@ export async function postFormData<T extends object>(args: ActionFunctionArgs, u
     : Promise<T | ErrorRes<T> | undefined> {
     try {
         const formData = await args.request.formData()
-        const headersInit: HeadersInit = {
-            'authorization': (includeToken === 'includeToken')
-                ? getJWT() || ''
-                : '',
+        let headersInit: Record<string, any> = {}
+        if (includeToken === 'includeToken')
+            headersInit['authorization'] = getJWT() || ''
+
+        headersInit = {
+            ...headersInit,
             // 'content-type': 'multipart/form-data',
             ...args.request.headers
         }

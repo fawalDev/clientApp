@@ -1,14 +1,44 @@
+import type { detailLoader } from "../Detail/loader";
+
 import { useStore } from "zustand";
+import { useCallback, useEffect } from "react";
+import { Form, useRouteLoaderData } from "react-router";
+
 import Input from "../../../components/UI/Input";
 import TextArea from "../../../components/UI/textArea";
 import modalStore from "../../../components/modal/store";
 
-import { useCallback } from "react";
-import { Form } from "react-router";
+import postStore from "../store";
+import getDefer from "../../../ultilities/fetcher/getDefer";
+import ServerUrl from "../../../ultilities/serverUrl";
+import type IPost from "../../../interfaces/post";
 
-export default function PostForm() {
+
+type props = {
+    isEdit?: boolean;
+}
+
+
+//* PostForm is used for both creating and editing posts.
+export default function PostForm({ isEdit = false }: props) {
     const hideModal = useStore(modalStore, (state) => state.hide);
 
+
+    let title: any = useStore(postStore, state => state.post.title)
+    let setTitle: any = useStore(postStore, state => state.setTitle)
+
+    let content: any = useStore(postStore, state => state.post.content)
+    let setContent: any = useStore(postStore, state => state.setContent)
+
+    useEffect(()=>{
+        getDefer<IPost>(ServerUrl.post + '/' + postId, 'includeToken')
+    })
+    if (isEdit) {
+        title = undefined
+        setTitle = () => undefined
+        content = undefined
+        setContent = () => undefined
+    }
     const handleCancel = useCallback(() => {
         hideModal()
     }, [hideModal])
@@ -18,12 +48,13 @@ export default function PostForm() {
         <div className="inset-0` flex items-center justify-center">
             <div className="bg-white rounded shadow-lg w-full max-w-md p-6">
                 <h2 className="text-xl font-semibold text-purple-800 mb-4 border-b-2 border-purple-800 pb-2">
-                    New Post
+                    {isEdit ? "EDIT POST" : "NEW POST"}
                 </h2>
 
-                <Form method="post" encType="multipart/form-data" className="space-y-4">
+                <Form method={isEdit ? 'put' : 'post'} encType="multipart/form-data" className="space-y-4">
                     {/* Title */}
-                    <Input label="TITLE" type="text" name="title" placeholder="New Post Title" />
+                    <Input label="TITLE" type="text" name="title" placeholder="New Post Title"
+                        value={title} onChange={e => setTitle(e.target.value)} />
 
                     {/* Image */}
                     <Input label="IMAGE" type="file" name="image" accept="image/*" >
@@ -32,7 +63,8 @@ export default function PostForm() {
 
                     <div className="h-14"></div>
                     {/* Content */}
-                    <TextArea label="CONTENT" name="content" placeholder="Write your post content here..." rows={4} />
+                    <TextArea label="CONTENT" name="content" placeholder="Write your post content here..." rows={4}
+                        value={content} onChange={e => setContent(e.target.value)} />
 
                     {/* Buttons */}
                     <div className="flex justify-end space-x-4 mt-6">

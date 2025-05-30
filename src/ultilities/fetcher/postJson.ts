@@ -16,14 +16,15 @@ export async function postJson<T extends object>(args: ActionFunctionArgs, url: 
     : Promise<T | ErrorRes<T> | undefined> {
     try {
         const data = await args.request.json()
-        const headersInit: HeadersInit = {
-            'authorization': (includeToken === 'includeToken')
-                ? getJWT() || ''
-                : '',
-            'Content-Type': 'application/json',
+        let headersInit: Record<string, any> = {}
+        if (includeToken === 'includeToken')
+            headersInit['authorization'] = getJWT() || ''
+
+        headersInit = {
+            ...headersInit,
+            // 'content-type': 'application/json',
             ...args.request.headers
         }
-
 
         const res = await fetch(url, {
             method: args.request.method,
