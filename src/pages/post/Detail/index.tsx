@@ -3,6 +3,7 @@ import type { detailLoader } from "./loader"
 import { Suspense } from "react"
 import Fallback from "../../../components/fallback"
 import type IPost from "../../../interfaces/post"
+import ServerUrl from "../../../ultilities/serverUrl"
 
 export default function Detail() {
     const { post }: detailLoader = useLoaderData()
@@ -40,7 +41,7 @@ function Post({ post }: props) {
             {/* Image */}
             {post.imgUrl && (
                 <img
-                    src={post.imgUrl}
+                    src={ServerUrl.base + '/' + post.imgUrl}
                     alt="Post"
                     className="mx-auto w-80 h-auto object-cover mb-4"
                 />

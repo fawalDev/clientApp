@@ -3,19 +3,15 @@ import Input from "../../../components/UI/Input";
 import TextArea from "../../../components/UI/textArea";
 import modalStore from "../../../components/modal/store";
 
-import modalStyle from '../../../components/modal/Modal.module.css'
 import { useCallback } from "react";
 import { Form } from "react-router";
 
 export default function PostForm() {
-    const setHidden = useStore(modalStore, (state) => state.setHidden);
+    const hideModal = useStore(modalStore, (state) => state.hide);
 
     const handleCancel = useCallback(() => {
-        setHidden((modalStyle['fading-hidden']))
-        setTimeout(() =>
-            setHidden(modalStyle['hidden'])
-            , 300)
-    }, [setHidden])
+        hideModal()
+    }, [hideModal])
 
     return (
 

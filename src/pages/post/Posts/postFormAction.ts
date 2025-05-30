@@ -4,15 +4,11 @@ import ServerUrl from "../../../ultilities/serverUrl";
 import modalStore from "../../../components/modal/store";
 
 export async function postFormAction(args: ActionFunctionArgs) {
-    const setHidden = modalStore.getState().setHidden
-    const actionInDone = ()=>{
-
+    const hideModal = modalStore.getState().hide
+    const actionInDone = () => {
+        hideModal()
+        return redirect('/')
     }
-    
-    return await postFormData(
-        args,
-        ServerUrl.post,
-        'includeToken',
-        () => redirect('/')
-    )
-} 
+
+    return await postFormData(args, ServerUrl.post, 'includeToken', actionInDone)
+}

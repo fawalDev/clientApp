@@ -9,6 +9,6 @@ export type detailLoader = {
 
 export function loader(args: LoaderFunctionArgs): detailLoader {
     return {
-        post: getDefer<IPost>(ServerUrl.post + '/' + args.params.id)
+        post: getDefer<IPost>(ServerUrl.post + '/' + args.params['id'])
     }
 }

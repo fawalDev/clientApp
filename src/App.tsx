@@ -28,6 +28,10 @@ const router = createBrowserRouter([
         loader: args => import('./pages/post/Detail/loader').then(i => i.loader(args))
       },
       {
+        path: 'post/delete/:id',
+        action: args => import('./pages/post/Delete/action').then(i => i.deleteAction(args))
+      },
+      {
         path: '/login',
         element: <Suspense fallback={<Fallback />}><Login /></Suspense>,
         action: args => import('./pages/authen/loginAction').then(i => i.loginAction(args))

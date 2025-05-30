@@ -17,15 +17,12 @@ interface props extends PropsWithChildren {
 
 function Modal({ children, onCloseFnc }: props) {
     const hidden = useStore(modalStore, state => state.hidden)
-    const setHidden = useStore(modalStore, state => state.setHidden)
+    const hide = useStore(modalStore, state => state.hide)
 
     const closeModal = useCallback(() => {
         onCloseFnc?.()
-        setHidden(style['fading-hidden'])
-        setTimeout(() => {
-            setHidden(style['hidden'])
-        }, 300);
-    }, [setHidden, onCloseFnc])
+        hide()
+    }, [hide, onCloseFnc])
     useEffect(() => {
         function handKeyDown(e: KeyboardEvent) {
             if (e.key === 'Escape')

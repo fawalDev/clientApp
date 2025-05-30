@@ -7,18 +7,18 @@ import type Res from '../../../models/response'
 import type ErrorRes from '../../../models/errorResponse'
 
 
-type ModalType = 'inform' | 'error'
-// type Hidden = 'fading-hidden' | 'hidden' | ''
+export type ModalType = 'inform' | 'error'
+
 interface IModalStore {
     hidden: string
     // response indicate whether successRes or errorRes
     resonse: Res | ErrorRes,
     // type define the modal should be rendered <InformModal> or <ErrorModal>
-    type: ModalType,
+    type: string,
     show: () => void
-    setHidden: (hiddenClass: string) => void
+    hide: () => void
     setResponse: (res: Res | ErrorRes) => void
-    setType: (type: ModalType) => void
+    setType: <T extends string = ModalType>(type: T) => void
 }
 const modalStore: StoreApi<IModalStore> = createStore(set => ({
     hidden: modalStyle['hidden'],
@@ -26,13 +26,17 @@ const modalStore: StoreApi<IModalStore> = createStore(set => ({
     type: 'inform',
 
     show: () => set(state => ({ ...state, hidden: '' })),
-    setHidden: (hiddenClass) => set(state => ({
-        ...state, hidden: hiddenClass
-    })),
+    hide: () => {
+        set(state => ({ ...state, hidden: modalStyle['fading-hidden'] }))
+        setTimeout(() =>
+            set(state => ({ ...state, hidden: modalStyle['hidden'] }))
+            , 300
+        )
+    },
     setResponse: (res) => set((state) => ({
         ...state, resonse: res
     })),
-    setType: (type) => set(state => ({
+    setType: (type: string) => set(state => ({
         ...state, type: type
     })),
 }))

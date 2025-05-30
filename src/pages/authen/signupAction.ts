@@ -1,6 +1,6 @@
 import type IAuthRes from "../../interfaces/response/fulfill/authenRes";
 
-import { redirect, type ActionFunctionArgs } from "react-router";
+import type { ActionFunctionArgs } from "react-router";
 
 import ServerUrl from "../../ultilities/serverUrl";
 import { postJson } from "../../ultilities/fetcher/postJson";
@@ -18,7 +18,7 @@ export async function signupAction(args: ActionFunctionArgs) {
         // store JWT in localStorage
         setJWT(jsonRes?.jwtToken || '');
         setUserInfor(jsonRes?.userInfor!)
-        return redirect('/');
+        return
     }
 
     return await postJson(args, ServerUrl.signup, 'noneToken', actionInDone)
