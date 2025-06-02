@@ -4,11 +4,11 @@ import ServerUrl from "../../../ultilities/serverUrl";
 
 
 export type postLoader = {
-    postList: Promise<IPost[] | null>
+    postListDefer: Promise<IPost[] | null>
 }
 
 export function loader(): postLoader {
     return {
-        postList: getDefer<IPost[]>(ServerUrl.post, 'includeToken')
+        postListDefer: getDefer<IPost[]>(ServerUrl.post, 'includeToken')
     }
 }

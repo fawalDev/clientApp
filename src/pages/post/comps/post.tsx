@@ -10,7 +10,7 @@ type props = {
     post: IPost
 }
 
-export default function PostCard({ post }: props) {
+export default function Post({ post }: props) {
     const fetcher = useFetcher()
     const createdAt = new Date(post.createdAt || '').toDateString()
 
