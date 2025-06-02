@@ -3,12 +3,15 @@ import ServerUrl from "../../../ultilities/serverUrl";
 import { postFormData } from "../../../ultilities/fetcher/postFormData";
 import type ErrorRes from "../../../models/errorResponse";
 import modalStore from "../../../components/modal/store";
+import postStore from "../store";
 
 
 
 export async function deleteAction(args: ActionFunctionArgs) {
     const id = args.params['id']
     const deleteUrl = ServerUrl.post + '/' + id
+
+    const removePost = postStore.getState().removePost
 
     const showModal = modalStore.getState().show
     const setType = modalStore.getState().setType
@@ -18,6 +21,8 @@ export async function deleteAction(args: ActionFunctionArgs) {
         setType('inform')
         setResponse({ message: 'Delete post successfully' })
         showModal()
+
+        removePost(id!)
     }
 
     const actionInFailed = (jsonRes: ErrorRes) => {

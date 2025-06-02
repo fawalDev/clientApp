@@ -1,20 +1,25 @@
+import type { postLoader } from "../Posts/loader"
+import type IPostIO from "../../../interfaces/socket.io/post.io"
+
 import { useEffect, useState } from "react"
 import { useLoaderData } from "react-router"
 
 import PostCard from "./post"
-import type IPost from "../../../interfaces/post"
-import type { postLoader } from "../Posts/loader"
 import Fallback from "../../../components/fallback"
 import openSocket from 'socket.io-client'
 import ServerUrl from "../../../ultilities/serverUrl"
-import type IPostIO from "../../../interfaces/socket.io/post.io"
+import { useStore } from "zustand"
+import postStore from "../store"
 
 
 export default function PostList() {
     const { postListDefer }: postLoader = useLoaderData()
 
     // postList will be set after the deferred data is resolved in effect side
-    const [postList, setPostList] = useState<IPost[]>([])
+    const postList = useStore(postStore, state => state.postList)
+    const setPostList = useStore(postStore, state => state.setPostList)
+    const addPost = useStore(postStore, state => state.addPost)
+
     const [deferCompl, setDeferCompl] = useState(false)
 
 
@@ -23,10 +28,10 @@ export default function PostList() {
         const socket = openSocket(ServerUrl.base)
         socket.on('posts', (data: IPostIO) => {
             if (data.action === 'create')
-                setPostList(prev => [data.post, ...prev])
+                addPost(data.post)
 
         })
-    }, [setPostList])
+    }, [addPost])
 
 
     useEffect(() => {
@@ -38,7 +43,7 @@ export default function PostList() {
         }).catch((error) => {
             console.error("Error loading posts:", error);
         });
-    }, [postListDefer])
+    }, [])
 
     return (
         <div className="flex flex-col gap-3  mt-8">

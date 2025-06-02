@@ -25,7 +25,9 @@ export default function Post({ post }: props) {
     return (
         <div className="border border-purple-700 rounded p-4 mb-4 w-full max-w-xl">
             <p className="text-sm text-gray-600 mb-1">
-                Posted by on <span className="font-semibold">{createdAt}</span>
+                Posted by
+                <span className="font-semibold"> {post.creator?.name || post.creator?.email} </span>
+                on <span className="font-semibold">{createdAt}</span>
             </p>
 
             <h2 className="text-lg font-semibold text-purple-800">{post.title}</h2>
