@@ -20,6 +20,7 @@ export default function PostList() {
     const setPostList = useRef(useStore(postStore, state => state.setPostList))
     const addPost = useRef(useStore(postStore, state => state.addPost))
     const updatePost = useRef(useStore(postStore, state => state.updatePost))
+    const removePost = useRef(useStore(postStore, state => state.removePost))
 
     const [deferCompl, setDeferCompl] = useState(false)
 
@@ -29,10 +30,12 @@ export default function PostList() {
         const socket = openSocket(ServerUrl.base)
         socket.on('posts', (data: PostEmitVal) => {
             if (data.action === 'create')
-                addPost.current(data.post)
+                addPost.current(data.post!)
             else if (data.action === 'update') {
-                updatePost.current(data.post)
+                updatePost.current(data.post!)
             }
+            else if (data.action === 'delete')
+                removePost.current(data.postId!)
         })
     }, [])
 
