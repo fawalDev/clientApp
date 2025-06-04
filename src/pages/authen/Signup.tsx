@@ -1,18 +1,11 @@
-import type Res from '../../models/response';
-import type IAuthRes from '../../interfaces/response/fulfill/authenRes';
-
 import React, { useState } from 'react';
-import { useStore } from 'zustand';
+import { useSubmit } from 'react-router';
 
 import Input from '../../components/UI/Input';
-import { signupAction } from './signupAction';
-import authenStore from '../../store/authenStore';
-import { setJWT, setUserInfor } from '../../ultilities/jwtToken';
 import useTwoWayBinding from '../../hooks/useTwoWayBinding';
 import useValidate from '../../hooks/useValidate';
 import { isNotNull } from '../../ultilities/inputValidation/validate';
 import ErrorMsg from '../../components/UI/ErrorMsg';
-import { useNavigate } from 'react-router';
 
 
 
@@ -26,27 +19,20 @@ export default function SignupForm() {
   const nameErrorMsg = useValidate('Email', name, [isNotNull])
   const passwordErrorMsg = useValidate('Password', password, [isNotNull])
 
-  const setAuthenInfor = useStore(authenStore, (state) => state.setAuthenInfor);
 
   const [isSubmited, setIsSubmited] = useState(false)
-  const navigate = useNavigate()
+  const submit = useSubmit()
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmited(true)
 
     // prevent submit if any validation errors
-    if (emailErrorMsg || passwordErrorMsg)
+    if (emailErrorMsg || nameErrorMsg || passwordErrorMsg)
       return
 
-    signupAction(email, name, password)
-      .then((data: Res<IAuthRes>) => {
-        // dispatch state action in zustand store
-        setAuthenInfor(data.infor?.userInfor!);
-        // store JWT in localStorage
-        setJWT(data.infor?.jwtToken || '');
-        setUserInfor(data.infor?.userInfor!)
-        navigate('/'); // redirect to home page after login
-      });
+    submit({ email, name, password }, {
+      method: 'post', encType: 'application/json'
+    })
   };
 
   return (

@@ -12,6 +12,7 @@ type PostStore = {
 
     setPostList: (posts: IPost[]) => void
     addPost: (post: IPost) => void
+    updatePost: (post: IPost) => void
     removePost: (id: string) => void
 
     resetPost: () => void
@@ -33,6 +34,15 @@ const postStore = createStore<PostStore>(set => ({
 
     setPostList: (posts) => set(state => ({ ...state, postList: posts })),
     addPost: (post) => set(state => ({ ...state, postList: [post, ...state.postList] })),
+    updatePost: (post: IPost) => set(state => {
+        const index = state.postList.findIndex(i => i._id === post._id)
+        const uptList = [...state.postList]
+        uptList[index] = post
+        return {
+            ...state, postList: uptList
+        }
+    }),
+
     removePost: (id) => set(state => {
         const updatedList = state.postList.filter(i => i._id !== id)
         return {

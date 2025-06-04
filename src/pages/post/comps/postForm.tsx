@@ -42,6 +42,7 @@ export default function PostForm({ isEdit = false }: props) {
         title = undefined; setTitle = () => undefined; content = undefined; setContent = () => undefined;
     }
 
+    // def - default
     const [defTitle, setDefTitle] = useState('')
     const [defContent, setDefContent] = useState('');
 
@@ -50,12 +51,13 @@ export default function PostForm({ isEdit = false }: props) {
     /*
      fetch post detail to pre-population    */
     useEffect(() => {
-        getDefer<IPost>(ServerUrl.post + '/' + postId, 'includeToken')
-            .then(post => {
-                setDefTitle(post?.title || '')
-                setDefContent(post?.content || '')
-            })
-    }, [postId])
+        if (isEdit)
+            getDefer<IPost>(ServerUrl.post + '/' + postId, 'includeToken')
+                .then(post => {
+                    setDefTitle(post?.title || '')
+                    setDefContent(post?.content || '')
+                })
+    }, [postId, isEdit])
 
     const handleCancel = useCallback(() => {
         hideModal()

@@ -1,7 +1,7 @@
 import type { postLoader } from "../Posts/loader"
-import type IPostIO from "../../../interfaces/socket.io/post.io"
+import type { PostEmitVal } from "../../../types/socket.IO"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useLoaderData } from "react-router"
 
 import PostCard from "./post"
@@ -17,8 +17,9 @@ export default function PostList() {
 
     // postList will be set after the deferred data is resolved in effect side
     const postList = useStore(postStore, state => state.postList)
-    const setPostList = useStore(postStore, state => state.setPostList)
-    const addPost = useStore(postStore, state => state.addPost)
+    const setPostList = useRef(useStore(postStore, state => state.setPostList))
+    const addPost = useRef(useStore(postStore, state => state.addPost))
+    const updatePost = useRef(useStore(postStore, state => state.updatePost))
 
     const [deferCompl, setDeferCompl] = useState(false)
 
@@ -26,18 +27,20 @@ export default function PostList() {
     // socket.io in effect side to prevent infinity re-rendering
     useEffect(() => {
         const socket = openSocket(ServerUrl.base)
-        socket.on('posts', (data: IPostIO) => {
+        socket.on('posts', (data: PostEmitVal) => {
             if (data.action === 'create')
-                addPost(data.post)
-
+                addPost.current(data.post)
+            else if (data.action === 'update') {
+                updatePost.current(data.post)
+            }
         })
-    }, [addPost])
+    }, [])
 
 
     useEffect(() => {
         postListDefer.then((posts) => {
             if (posts && posts.length !== 0) {
-                setPostList(posts)
+                setPostList.current(posts)
             }
             setDeferCompl(true)
         }).catch((error) => {
